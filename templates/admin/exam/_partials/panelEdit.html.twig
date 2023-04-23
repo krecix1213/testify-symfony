@@ -1,0 +1,62 @@
+<form method="post" action="{{path('question.update', exam.id)}}">
+    {{method_field('PUT')}}
+    {# {{csrf_field()}} #}
+    <input type="hidden" name="question_id" value="{{question.id}}">
+    <input type="hidden" name="question_number" value="{{question.question_number}}">
+    <input type="hidden" name="question_type" value="{{question.question_type}}">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4><input class="form-control" type="text" name="question_title" value="{{question.question_title}}"></h4>
+        </div>
+        <div class="panel-body">
+            {% set show = false %}
+            {% for i,item in question.answers %}
+                {% set i = i + 1 %}
+                {% if question.question_type == 1 %}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <input type="radio" name="answer_correct" value="{{i}}" {% if i == question.answer_correct %}checked{% endif %} />
+                        </span>
+                        <input type="Text" class="form-control" name="answers[{{i}}]" value="{{item.answer}}">
+                    </div>
+                {% endif %}
+                {% if question.question_type == 3 %}
+                    {% set counter = 1 %}
+                        {% for answer in answers %} 
+                            {% if show == false %}
+                                
+                                    <label class="input-group">
+                                        <span class="input-group-addon">
+                                            <input type="checkbox" name="answer_correct[{{counter}}][check]" {% if answer.correct == "true" %}checked{% endif %}>
+                                        </span>
+                                    <input type="Text" class="form-control" name="answers[{{counter}}][answer]" value="{{answer,answer}}">
+                                    </label>
+                            {% endif %}
+                            {% set counter = counter + 1 %}
+                        {% endfor %}
+                    {% set show = true %}
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class="panel-footer">
+            <button class="btn btn-info" type="submit">Zapisz</button>
+            <a class="btn btn-warning" href="{{path('admin.exam.id',exam.id)}}">Anuluj</a>
+            {% if question.question_type == 1 %}
+                <button class="btn btn-info" type="button" disabled>Zmień na Otwarty typ pytania</button>
+                <button class="btn btn-info" type="button" disabled>Zmień na Wielokrotnego wyboru typ pytania</button>
+                <button class="btn btn-info" type="button" onclick="//addRadio()" disabled>Dodaj odpowiedz</button>
+                <button class="btn btn-info" type="button" onclick="//delRadio()" disabled>Usun odpowiedz</button>
+            {% elseif question.question_type == 2 %}
+                <button class="btn btn-info" type="button" disabled>Zmień na ABC typ pytania</button>
+                <button class="btn btn-info" type="button" disabled>Zmień na Wielokrotnego wyboru typ pytania</button>
+            {% elseif question.question_type == 3 %}
+                <button class="btn btn-info" type="button" disabled>Zmień na Otwarty typ pytania</button>
+                <button class="btn btn-info" type="button" disabled>Zmień na ABC typ pytania</button>
+                <button class="btn btn-info" type="button" onclick="//addCheck()" disabled>Dodaj odpowiedz</button>
+                <button class="btn btn-info" type="button" onclick="//delCheck()" disabled>Usun odpowiedz</button>
+            {% endif %}
+        </div>
+</div>
+</form>
+

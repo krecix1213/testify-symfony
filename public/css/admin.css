@@ -1,0 +1,11 @@
+/* Style for admin/exam*/
+form div.input-group{
+    margin:10px 0 10px 0;
+}
+button.btn.btn-primary.btn-group-justified{
+    margin-top: 10px;
+}
+/*Style for editor exam*/
+#setting{
+    padding:15px;
+}

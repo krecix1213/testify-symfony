@@ -1,0 +1,39 @@
+{% extends "admin/base.html.twig" %}
+
+{% block content %}
+    {{parent()}}
+    {# @include('admin::includes.displayErrors') Na chuj#}
+    <p>Wybierz jeden z dostępnych testów</p>
+        {% for exam in exams %}
+
+                <form action="{{path('apiExamDelete', {id:exam.id})}}" method="post">
+                    {# {{csrf_field()}} #}
+                    <input name="_method" type="hidden" value="DELETE">
+
+                    <div class="input-group" >
+                        <a href="{{path('AdminExamView',{id:exam.id})}}" class="form-control">{{exam.name}}</a>
+                        <span class="input-group-btn" >
+                            <button class="btn btn-danger" type="submit">Usuń</button>
+                        </span>
+                    </div>
+                </form>
+
+        {% endfor %}
+
+    <button class="btn btn-primary btn-group-justified" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Dodaj test
+    </button>
+    <div class="collapse" id="collapseExample">
+        <div class="well">
+            <form action="{{path('apiExamStore')}}" method="post">
+                {# {{csrf_field()}} #}
+                    <div class="input-group">
+                        <input class="form-control" type="text" name="examName" title="New exam">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit">Dodaj</button>
+                            </span>
+                    </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

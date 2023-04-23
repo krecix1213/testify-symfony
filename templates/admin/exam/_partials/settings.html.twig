@@ -1,0 +1,29 @@
+{# Czas egzaminu #}
+<div class="form-group">
+    <label for="time">Czas na rozwiązanie testu w min: </label>
+    <input type="number" class="form-control" min="0"  name="time" id="time" placeholder="Czas na rozwiązanie egzaminu"  {% if exam.time != 0 %} value="{{exam.time}}" {% endif %} >
+</div>
+
+{# Ilosc pytan #}
+<div class="form-group">
+    <label for="xOFy">Ilosc pytań na egzaminie: </label>
+    <input type="number" class="form-control" min="0" name="xOFy" id="xOFy" placeholder="Ilośc pytań" {% if exam.xOFy != null %} value="{{exam.xOFy}}" {% endif %} />
+</div>
+
+
+{# Losowanie pytań #}
+<label class="checkbox-inline">
+    <input type="checkbox" name="random" id="random" value="1" disabled {% if exam.random == true %}checked{% endif %} />Losowa kolejność pytań
+</label>
+
+{# Progresywny egzamin #}
+<label class="checkbox-inline">
+    <input type="checkbox" name="progressive" id="progressive" value="1" disabled {% if exam.progressive == true %}checked{% endif %} />Egzamin progresywny
+</label>
+
+{# Strona z Zasadami #}
+<label class="checkbox-inline">
+    <input type="checkbox" name="rules_page" value="1" {% if exam.rulesPage == 1 %}checked{% endif %} />Strona z zasadami
+    <input type="hidden" name="set_rules" value="1">
+</label>
+<textarea name="rules" placeholder="Wpisz tutaj zasady testu..">{{exam.rulesPageText}}</textarea>

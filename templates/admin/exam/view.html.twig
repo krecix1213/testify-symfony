@@ -1,0 +1,83 @@
+{% extends "admin/base.html.twig" %}
+
+{% block content %}
+    {{parent()}}
+    <script type="text/javascript">
+        function scrollDown() {
+            $('html,body').animate(
+                {scrollTop: $('#buttonCollapse').offset().top}
+            )
+        }
+    </script>
+    {# @include('admin::includes.displayErrors') Na chuj#}
+    {# @if(null != session('add'))
+        @if(session('add') != 0)
+            <div class="alert alert-success">Użytkownicy od teraz mają zezwolenie na rozwiązanie egzaminu</div>
+        @elseif(session('add') == 0)
+            <div class="alert alert-warning">Brak zmian</div>
+        @endif
+    @endif Do czego ?? #}
+    <form class="panel panel-default">
+        <div class="panel-heading">Widok egzaminu</div>
+        <div class="panel-body">
+            <form action="{{path('apiExamStore', {id:exam.id})}}" method="post">
+                {# {{method_field('PUT')}}
+                {{csrf_field()}} #}
+                <div class="input-group">
+                    <input type="text" name="new_name" class="form-control" placeholder="{{exam.name}}" />
+                    <span class="input-group-btn">
+                            <button class="btn btn-info" type="submit" name="action" value="save">Zapisz</button>
+                    </span>
+                </div>
+            </form>
+        </div>
+        <div class="panel panel-default" id="setting">
+            <form action="{{path('apiExamSave', {id:exam.id})}}" method="post">
+                {# {{csrf_field()}} #}
+                <input type="hidden" name="exam_id" value="{{exam.id}}" />
+                {% include "admin/exam/_partials/settings.html.twig" %}
+                <div class="panel-body">
+                    <button class="btn btn-success" type="submit">Zapisz ustawienia</button>
+                </div>
+
+            </form>
+        </div>
+        {% if Users %}
+            <div class="well">Wybierz użytkowników którzy mają prawo wykonać test
+                <form method="post" action="{{path('apiExamSaveUser',{id:exam.id})}}">
+                    <div class="table-bordered">
+                        {# {{csrf_field()}} #}
+                        <input type="hidden" name="testName" value="{{exam.id}}" />
+                        <div>
+                            {% for user in Users %}
+                                <input type="checkbox" name="user[{{user.id}}][check]" {% if user.status == "belong" %}checked{% endif %} />{{user.email}}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="table-bordered">
+                        <label>Wybierz grupy które mają prawo wykonać test</label><br/>
+                        {% for group in Groups %}
+                                <input type="checkbox" name="group[{{group.id}}][check]" {% if group.groupStatus == "belong" %}checked{% endif %} />{{group.group_name}}
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="btn-success">Zapisz</button>
+                </form>
+            </div>
+        {% endif %}
+        {% for question in exam.questions %}
+            {% if question.id == edit_id %}
+                {# @include('admin::exam.edit.panelEdit') #}
+            {% else %}
+                {# @include('admin::exam.edit.panelDisplay') #}
+            {% endif %}
+        {% endfor %}
+        <button class="btn btn-primary btn-group-justified" id="buttonCollapse" type="button" data-toggle="collapse"
+                data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                onclick="scrollDown()">
+            +
+        </button>
+        <div class="collapse" id="collapseExample">
+            {% include "admin/exam/_partials/addNewQuestion.html.twig" %}
+        </div>
+    </div>
+{% endblock %}

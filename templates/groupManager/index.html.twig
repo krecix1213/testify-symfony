@@ -1,0 +1,61 @@
+{% extends "admin/base.html.twig" %}
+
+{% block content %}
+<script type="text/javascript">
+    function searchUser(user) {
+        var type=['user','group'];
+        var val=$('#pulldown').val();
+        if (user.length > 0) {
+            $("td."+type[val]).parent().hide();
+            $("td."+type[val]+":contains(" + user + ")").parent().show();
+        }
+        else {
+            $("td."+type[val]).parent().show();
+        }
+    }
+</script>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-8">
+                <input type="text" name="user" placeholder="Szukaj użytkownika" class="form-control" onkeyup="searchUser(this.value)"/>
+            </div>
+            <div class="col-md-1" style="position: relative;top:10px;">
+                Po
+            </div>
+            <div class="col-md-3">
+                <select class="form-control" id="pulldown">
+                    <option value="0">Nazwie Użytkownika</option>
+                    <option value="1">Nazwie Grupy</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <table class="table table-bordered">
+        <tr><td>Lp.</td><td>Nazwa grupy</td><td>Użytkownicy</td><td> </td><td> </td></tr>
+        {% set i = 1 %}
+        {% for group in groups %}
+            <tr>
+            <td>{{i}}</td>
+            <td class="group">{{group.name}}</td>
+                <td class="user">
+                    {# {% for userGroup in UsersGroup %}
+                        {% if userGroup.role == "ROLE_USER" %}
+                            {% if userGroup.group_name == group.group_name %}
+                                <span>{{userGroup.name}}</span>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %} #}
+                </td>
+                <td>
+                    <a href="{#{{path('group.edit.id',$group->id)}}#}"><button class="btn btn-info">Edytuj</button></a>
+                </td>
+                <td>
+                    <a href="{#{{path('group.delete',$group->id)}}#}"><button class="btn btn-danger">Skasuj</button></a>
+                </td>
+            </tr>
+            {% set i = i + 1 %}
+        {% endfor %}
+    </table>
+
+    <a href="{{path('addGroupAdminGroupManager')}}"><button type="button" class="btn btn-success">Dodaj grupę</button></a>
+{% endblock %}

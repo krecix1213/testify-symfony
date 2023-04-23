@@ -1,0 +1,85 @@
+{% extends "admin/base.html.twig" %}
+
+{% block content %}
+    <script src="/js/jquery.tablesorter.min.js"></script>
+    {# @if(null != session('delete'))
+            <div class="alert alert-success">Usunięto użytkownika {{session('delete')}}</div>
+        @endif #} 
+    {#Przerobic moze flash ?? #}
+    {# Tablesorter js ??#}
+    <div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-8">
+                    <input type="text" name="user" placeholder="Szukaj użytkownika" class="form-control" onkeyup="searchUser(this.value)"/>
+                </div>
+                <div class="col-md-1" style="position: relative;top:10px;">
+                    Po
+                </div>
+                <div class="col-md-3">
+                    <select class="form-control" id="pulldown">
+                        <option value="0">Nazwie</option>
+                        <option value="1">Emailu</option>
+                        <option value="2">Roli</option>
+                        <option value="3">Grupie</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <table id="table" class="table table-bordered tablesorter">
+            <tr><th>Lp.</th><th>Nazwa</th><th>Email</th><th>Rola</th><th>Grupa</th><th>Utworzony</th><th>Zaaktulizowany</th></tr>
+            {% for user in userList %}
+                {% set flagHasGroup = 0 %}
+                <tr>
+                    <td>{{user.id}}</td>
+                    <td class="user">{{user.name}}</td>
+                    <td class="email">{{user.email}}</td>
+                    {% if user.role == "ROLE_OFF" %}
+                        <td class="role">Konto nieaktywne</td>
+                    {% endif %}
+                    {% if user.role == "ROLE_ADMIN" %}
+                        <td class="role">Administrator</td>
+                    {% endif %}
+                    {% if user.role == "ROLE_EDITOR" %}
+                        <td class="role">Edytor</td>
+                    {% endif %}
+                    {% if user.role == "ROLE_USER" %}
+                        <td class="role">Użytkownik</td>
+                    {% endif %}
+                    {# <td class="group">
+                        {% for groupsOfUsers in groupOfUser %}
+                            {% if user.id == groupOfuser.user_id %}
+                                <span>{{groupOfuser.group_name}}</span>
+                                {% set flagHasGroup = 1 %}
+                            {% endif %}
+                        {% endfor %}
+                    {% if flagHasGroup == 0 %}
+                        Brak
+                    {% endif %}
+                    </td> #}
+                    {# <td>{{user.created_at}}</td>
+                    <td>{{user.updated_at}}</td> #}
+                    {# <td><a href="{{route('user.manager.edit.user.show',user.id)}}"><button class="btn btn-info">Edytuj</button></a></td> #}
+                </tr>
+            {% endfor %}
+        </table>
+        <a href="{{path('addUserAdminUserManager')}}"><button class="btn btn-success">Dodaj użytkownika</button></a>
+    </div>
+    <script>
+        //table sorter
+    </script>
+    <script type="text/javascript">
+    function searchUser(user) {
+        var type=['user','email','role','group'];
+        var val=$('#pulldown').val();
+        if (user.length > 0) {
+            $("td."+type[val]).parent().hide();
+            $("td."+type[val]+":contains(" + user + ")").parent().show();
+        }
+        else {
+            $("td."+type[val]).parent().show();
+        }
+    }
+    </script>
+
+{% endblock %}
